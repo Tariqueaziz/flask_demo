@@ -24,9 +24,15 @@ class TestBase(TestCase):
     user = User(username="user", password="user")
     user2 = User(username="user2", password="user2")
 
+    role = Role(name="admin", description="all")
+
+    post = Post(post="test post")
+
     db.session.add(admin)
     db.session.add(user)
     db.session.add(user2)
+    db.session.add(role)
+    db.session.add(post)
     db.session.commit()
 
   def tearDown(self):
@@ -44,14 +50,14 @@ class TestModels(TestBase):
     db.session.add(post)
     db.session.commit()
 
-    self.assertEqual(Post.query.count(), 1)
+    self.assertEqual(Post.query.count(), 2)
 
   def test_role_model(self):
     role = Role(name="BI", description="Business Intelligence")
     db.session.add(role)
     db.session.commit()
 
-    self.assertEqual(Role.query.count(), 1)
+    self.assertEqual(Role.query.count(), 2)
 
 class TestViews(TestBase):
 
@@ -65,8 +71,8 @@ class TestViews(TestBase):
 
 class TestApi(TestBase):
   def test_get_post(self):
-    rs = self.app.test_client.get('/api/get_posts')
-    self.assertEqual(res.status_code, 200)
+    rs = self.app.test_client().get('/api/get_posts')
+    self.assertEqual(rs.status_code, 200)
 
 if __name__ == '__main__':
   unittest.main()
