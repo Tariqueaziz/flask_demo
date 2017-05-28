@@ -19,7 +19,6 @@ app.logger.setLevel(logging.INFO)
 
 def check_auth(username, password):
   user = db.session.query(User).filter(or_(User.username == username, User.email == username)).first()
-  print("&"*200)
   if(user == None):
     return False
   if(user.verify_password(password)):
