@@ -63,5 +63,10 @@ class TestViews(TestBase):
     response = self.client.get(url_for('auth.login'))
     self.assertEqual(response.status_code, 200)
 
+class TestApi(TestBase):
+  def test_get_post(self):
+    rs = self.app.test_client.get('/api/get_posts')
+    self.assertEqual(res.status_code, 200)
+
 if __name__ == '__main__':
   unittest.main()

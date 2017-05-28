@@ -5,6 +5,14 @@ from .. import db
 
 from flask_login import login_required
 
+import logging
+from app import create_app
+app = create_app('development')
+
+file_handler = logging.FileHandler('api.log')
+app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.INFO)
+
 
 @api.route('/api/get_users')
 def get_users():
@@ -63,10 +71,13 @@ def update_post(post_id):
 def delete_post(post_id):
   post = Post.query.get(post_id)
   if (post == None):
+    app.logger.error("Post doesn't exist")
     return jsonify({'Error': "Post doesn't exist"}), 205
   try:
     db.session.delete(post)
     db.session.commit()
+    app.logger.info("Deleted post: " + post.post)
     return jsonify({'success':True}), 200
   except:
+    app.logger.warning("Couldn't delete the post")
     return jsonify({'Error': "Couldn't delete the post"}), 205
